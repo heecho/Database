@@ -23,10 +23,8 @@ In your browser a user would request <your site.com> +
 '''
 import socket
 
-
 HOST, PORT = '', 8888
 VIEWS_DIR = "./views"
-
 
 def run_server():
     listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,6 +32,7 @@ def run_server():
     listen_socket.bind((HOST, PORT))
     listen_socket.listen(1)
 
+    urls = {'/': index_page(), '/about': about_page()}
  
     print 'Serving HTTP on port %s ...' % PORT
     while True:
@@ -45,17 +44,10 @@ def run_server():
         request_page = request_first_part[1]
         print request_verb, request_page
 
-        if request_page != '/favicon.ico':
-            if request_page == '/':
-                page_file = VIEWS_DIR + '/index.html'
-            elif request_page == '/about':
-                page_file = VIEWS_DIR + '/about.html'
-
         http_response = """HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"""
 
-        if page_file:
-            with open(page_file, 'r') as f:
-                http_response += f.read()
+        if request_page in urls.keys():
+        	http_response += urls[request_page]
 
         if not request:
             continue
@@ -63,6 +55,15 @@ def run_server():
         client_connection.sendall(http_response)
         client_connection.close()
 
+def index_page():
+	page_file = VIEWS_DIR + '/index.html'
+	with open(page_file,'r') as f:
+		return f.read()
+
+def about_page():
+	page_file = VIEWS_DIR + '/about.html'
+	with open(page_file,'r') as f:
+		return f.read()	
 
 run_server()
 
