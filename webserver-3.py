@@ -24,7 +24,7 @@ the html part, and styling just once, then just inject the different blog data i
 
    Ex: render_template("<html>...",{"Title":"This is templating"})
 
-   - Render will the try to replace all the fields in that hash
+   - Render will then try to replace all the fields in that hash
 
    Ex: context = {"Title":"This is the title","BlogText":"this is blog data"}
 
@@ -69,15 +69,25 @@ def run_server():
         client_connection.sendall(http_response)
         client_connection.close()
 
+#def read_file():
+
 def index_page():
 	page_file = VIEWS_DIR + '/index.html'
+	filehash = {"Title":"This is a Title"}
 	with open(page_file,'r') as f:
-		return f.read()
-
+		filedata = f.read()
+		return render_template(filedata,filehash)
+		
 def about_page():
 	page_file = VIEWS_DIR + '/about.html'
 	with open(page_file,'r') as f:
 		return f.read()	
+
+
+def render_template(file_data, data_hash):
+	for k,v in data_hash.iteritems():
+		file_data = file_data.replace('###%s###' %k, v)
+		return file_data
 
 run_server()
 

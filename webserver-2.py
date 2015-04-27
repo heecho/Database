@@ -55,6 +55,9 @@ def run_server():
         client_connection.sendall(http_response)
         client_connection.close()
 
+#def read_page():
+	#comeback
+
 def index_page():
 	page_file = VIEWS_DIR + '/index.html'
 	with open(page_file,'r') as f:
