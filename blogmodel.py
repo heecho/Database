@@ -54,8 +54,10 @@ class BlogModel():
         #create a new row with data that you pass in
         cursor = self.db.cursor()
         cursor.execute('''INSERT INTO blog(post_name,post_text) VALUES(?,?)''',(post_name,post_text))
-        print "posted"
+        #print "posted"
+        postid = cursor.lastrowid
         self.db.commit()
+        return postid
 
     def read(self,post_id):
         # "search for id, and return post_name and post_text as a string"
