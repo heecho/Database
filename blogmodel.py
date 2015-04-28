@@ -62,8 +62,10 @@ class BlogModel():
         cursor = self.db.cursor()
         cursor.execute('''SELECT post_name,post_text FROM blog WHERE blogid=?''', (post_id,))
         post = cursor.fetchone()
-        print post
+        self.post_name = post[0]
+        self.post_text = post[1]
         self.db.commit()
+        return self.post_name,self.post_text
 
     def update(self, post_id, post_name, post_text):
         # "search for id, and set a new post_name and post_text"
@@ -88,6 +90,6 @@ blog = BlogModel('blogdb')
 #blog.read(2)
 #blog.read(3)
 #blog.destroy(3)
-#blog.read(3)
+#blog.read(1)
 #blog.close()
 

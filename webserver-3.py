@@ -85,8 +85,8 @@ def about_page():
 
 def render_template(filedata, data_hash):
 	for k,v in data_hash.iteritems():
-		file_data = filedata.replace('###%s###' %k, v)
-		return file_data
+		filedata = filedata.replace('###%s###' %k, v)
+	return filedata
 
 run_server()
 

@@ -24,11 +24,11 @@ def blog_page(id):
 
    - this function loops through urlpatterns using re.match and urlpatterns[0]
 
-   - if a match if found it calls the matching function
+   - if a match is found it calls the matching function
 
    - if a pattern has a grouping like /blog/(\d+) you pass the first group item to the function
 
-   Ex: a request for /blog comes in the regular expressions matches the third url patter, so blog_index_page is called
+   Ex: if a request for /blog comes in the regular expressions matches the third url patter, so blog_index_page is called
 
 '''
 
@@ -44,7 +44,8 @@ def run_server():
     listen_socket.bind((HOST, PORT))
     listen_socket.listen(1)
 
-    urls = {'/': index_page(), '/about': about_page()}
+    #urls = {'/': index_page(), '/about': about_page()}
+    
  
     print 'Serving HTTP on port %s ...' % PORT
     while True:
@@ -57,10 +58,12 @@ def run_server():
         print request_verb, request_page
 
         http_response = """HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"""
-
-        if request_page in urls.keys():
-          http_response += urls[request_page]
-
+        if request_page == '/favicon.ico':
+            continue
+        page_html = url_dispatch(request_page)
+        #print page_html
+        http_response += str(page_html)
+        
         if not request:
             continue
 
@@ -68,23 +71,38 @@ def run_server():
         client_connection.close()
 
 def read_file(page):
-  page_file = VIEWS_DIR + page
-  with open(page_file, 'r') as f:
-    return f.read()
+    page_file = VIEWS_DIR + page
+    with open(page_file, 'r') as f:
+        return f.read()
 
 def index_page():
-  filehash = {"Title":"This is a New Title"}
-  filedata = read_file('/index.html')
-  return render_template(filedata,filehash)
+    return read_file('/index.html')
     
 def about_page():
-  return read_file('/about.html') 
+    return read_file('/about.html') 
 
+def blog_index_page():
+    #return read_file('/blog_index.html')
+    pass
 
-def render_template(filedata, data_hash):
-  for k,v in data_hash.iteritems():
-    file_data = filedata.replace('###%s###' %k, v)
-    return file_data
+def blog_page(pageid):
+    #return read_file('/blog/%s.html' %(pageid))
+    pass
+
+urlpatterns = [(r'^/$',index_page),
+               (r'^/about$',about_page),
+               (r'^/blog$',blog_index_page),
+               (r'^/blog/(\d+)',blog_page)]
+
+def url_dispatch(url):
+    for regex,fn in urlpatterns:
+        match = re.match(regex, url) 
+            if match:
+                if len(match.groups()):
+                    return fn(match.group(1))
+                else:
+                    return fn()
+                
 
 run_server()
 
