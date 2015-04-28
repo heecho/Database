@@ -69,24 +69,23 @@ def run_server():
         client_connection.sendall(http_response)
         client_connection.close()
 
-#def read_file():
+def read_file(page):
+	page_file = VIEWS_DIR + page
+	with open(page_file, 'r') as f:
+		return f.read()
 
 def index_page():
-	page_file = VIEWS_DIR + '/index.html'
-	filehash = {"Title":"This is a Title"}
-	with open(page_file,'r') as f:
-		filedata = f.read()
-		return render_template(filedata,filehash)
+	filehash = {"Title":"This is a New Title"}
+	filedata = read_file('/index.html')
+	return render_template(filedata,filehash)
 		
 def about_page():
-	page_file = VIEWS_DIR + '/about.html'
-	with open(page_file,'r') as f:
-		return f.read()	
+	return read_file('/about.html')	
 
 
-def render_template(file_data, data_hash):
+def render_template(filedata, data_hash):
 	for k,v in data_hash.iteritems():
-		file_data = file_data.replace('###%s###' %k, v)
+		file_data = filedata.replace('###%s###' %k, v)
 		return file_data
 
 run_server()

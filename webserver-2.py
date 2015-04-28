@@ -55,18 +55,16 @@ def run_server():
         client_connection.sendall(http_response)
         client_connection.close()
 
-#def read_page():
-	#comeback
-
-def index_page():
-	page_file = VIEWS_DIR + '/index.html'
-	with open(page_file,'r') as f:
+def read_page(page):
+	page_file = VIEWS_DIR + page
+	with open(page_file, 'r') as f:
 		return f.read()
 
+def index_page():
+	return read_page('/index.html')
+
 def about_page():
-	page_file = VIEWS_DIR + '/about.html'
-	with open(page_file,'r') as f:
-		return f.read()	
+	return read_page('/about.html')
 
 run_server()
 
